@@ -1,4 +1,7 @@
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
+using System;
 
 namespace AutomationPracticeFormTests
 {
@@ -11,12 +14,11 @@ namespace AutomationPracticeFormTests
             this.driver = driver;
         }
 
-        // Locators
-        private By FirstNameField => By.Id("firstName");
-        private By LastNameField => By.Id("lastName");
-        private By EmailField => By.Id("userEmail");
+        // Using multiple locator strategies for robustness
+        private By FirstNameField => By.CssSelector("input[placeholder='Name']");
+        private By LastNameField => By.CssSelector("input[placeholder='Surname']");
+        private By EmailField => By.CssSelector("input[placeholder='Email']");
 
-        // Methods
         public void NavigateTo()
         {
             driver.Navigate().GoToUrl("https://app.cloudqa.io/home/AutomationPracticeForm");
@@ -24,32 +26,41 @@ namespace AutomationPracticeFormTests
 
         public void EnterFirstName(string firstName)
         {
-            driver.FindElement(FirstNameField).SendKeys(firstName);
+            WaitForElement(FirstNameField).Clear();
+            WaitForElement(FirstNameField).SendKeys(firstName);
         }
 
         public void EnterLastName(string lastName)
         {
-            driver.FindElement(LastNameField).SendKeys(lastName);
+            WaitForElement(LastNameField).Clear();
+            WaitForElement(LastNameField).SendKeys(lastName);
         }
 
         public void EnterEmail(string email)
         {
-            driver.FindElement(EmailField).SendKeys(email);
+            WaitForElement(EmailField).Clear();
+            WaitForElement(EmailField).SendKeys(email);
         }
 
-        public string GetFirstName()
+        public string? GetFirstName()
         {
-            return driver.FindElement(FirstNameField).GetAttribute("value");
+            return WaitForElement(FirstNameField).GetAttribute("value");
         }
 
-        public string GetLastName()
+        public string? GetLastName()
         {
-            return driver.FindElement(LastNameField).GetAttribute("value");
+            return WaitForElement(LastNameField).GetAttribute("value");
         }
 
-        public string GetEmail()
+        public string? GetEmail()
         {
-            return driver.FindElement(EmailField).GetAttribute("value");
+            return WaitForElement(EmailField).GetAttribute("value");
+        }
+
+        private IWebElement WaitForElement(By locator, int timeoutInSeconds = 10)
+        {
+            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
+            return wait.Until(ExpectedConditions.ElementExists(locator));
         }
     }
 }

@@ -1,18 +1,20 @@
 using NUnit.Framework;
+using System.Threading;
 
 namespace AutomationPracticeFormTests
 {
     [TestFixture]
     public class AutomationPracticeFormTests : BaseTest
     {
-        private AutomationPracticeFormPage formPage;
+        private AutomationPracticeFormPage? formPage;
 
         [SetUp]
         public void SetUp()
         {
             Initialize();
-            formPage = new AutomationPracticeFormPage(driver);
+            formPage = new AutomationPracticeFormPage(driver!);
             formPage.NavigateTo();
+            Thread.Sleep(2000);  // Short wait for page to load
         }
 
         [TearDown]
@@ -25,7 +27,7 @@ namespace AutomationPracticeFormTests
         public void TestFirstNameField()
         {
             string firstName = "John";
-            formPage.EnterFirstName(firstName);
+            formPage!.EnterFirstName(firstName);
             Assert.AreEqual(firstName, formPage.GetFirstName());
         }
 
@@ -33,7 +35,7 @@ namespace AutomationPracticeFormTests
         public void TestLastNameField()
         {
             string lastName = "Doe";
-            formPage.EnterLastName(lastName);
+            formPage!.EnterLastName(lastName);
             Assert.AreEqual(lastName, formPage.GetLastName());
         }
 
@@ -41,7 +43,7 @@ namespace AutomationPracticeFormTests
         public void TestEmailField()
         {
             string email = "john.doe@example.com";
-            formPage.EnterEmail(email);
+            formPage!.EnterEmail(email);
             Assert.AreEqual(email, formPage.GetEmail());
         }
     }
