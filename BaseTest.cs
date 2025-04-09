@@ -1,24 +1,33 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
+using System;
 
 namespace AutomationPracticeFormTests
 {
     public class BaseTest
     {
-        protected IWebDriver driver;
+        protected IWebDriver? driver;
 
         public void Initialize()
         {
-            new DriverManager().SetUpDriver(new ChromeConfig());
-            driver = new ChromeDriver();
-            driver.Manage().Window.Maximize();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArgument("--no-sandbox");
+            chromeOptions.AddArgument("--disable-dev-shm-usage");
+            
+            // We can re-enable headless mode for production
+            chromeOptions.AddArgument("--headless");
+            
+            driver = new ChromeDriver(chromeOptions);
+            driver.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
+            
+            // Set reasonable timeouts
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(15);
         }
 
         public void Cleanup()
         {
-            driver.Quit();
+            driver?.Quit();
         }
     }
 }
