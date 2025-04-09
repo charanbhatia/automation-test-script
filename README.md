@@ -60,7 +60,8 @@ During testing, we encountered several service-side issues with the target websi
 
 ### Issue: TinyMCE Editor in Read-only Mode
 
-As visible in the screenshot, the TinyMCE editor on the form displays the following error message:
+the TinyMCE editor on the form displays the following error message:
+
 
 ```
 TinyMCE is in read-only mode because you have no more editor loads available this month.
